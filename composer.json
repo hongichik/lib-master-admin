@@ -1,0 +1,22 @@
+{
+    "name": "hongdev/master-admin",
+    "description": "Master Admin package for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hongdev\\MasterAdmin\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hongdev\\MasterAdmin\\MasterAdminServiceProvider"
+            ]
+        }
+    }
+}

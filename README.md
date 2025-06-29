@@ -1,0 +1,26 @@
+# Master Admin
+
+**Master Admin** là thư viện Laravel giúp cấu hình nhanh trang quản trị (admin) và một số giao diện người dùng cơ bản, dựa trên giao diện [AdminLTE](https://github.com/ColorlibHQ/AdminLTE#).
+
+## Tính năng
+
+- Tích hợp giao diện AdminLTE hiện đại, dễ tuỳ biến.
+- Cấu hình nhanh các trang quản trị cho dự án Laravel.
+- Hỗ trợ một số giao diện người dùng mẫu, tiện lợi cho phát triển nhanh.
+- Dễ dàng mở rộng và tuỳ chỉnh theo nhu cầu.
+
+## Cài đặt
+
+```bash
+composer require hongdev/master-admin
+```
+
+## Sử dụng
+
+- Đăng ký ServiceProvider nếu Laravel không tự động phát hiện.
+- Truy cập các route mẫu hoặc tuỳ chỉnh theo nhu cầu dự án.
+
+## Nguồn giao diện
+
+Giao diện sử dụng: [AdminLTE by ColorlibHQ](https://github.com/ColorlibHQ/AdminLTE#)
+# lib-master-admin

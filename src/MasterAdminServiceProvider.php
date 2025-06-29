@@ -10,7 +10,8 @@ class MasterAdminServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Register any application services.
+        // Merge config
+        $this->mergeConfigFrom(__DIR__.'/../config/masteradmin.php', 'masteradmin');
     }
 
     public function boot()
@@ -25,6 +26,11 @@ class MasterAdminServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../public' => public_path('vendor/master-admin'),
         ], 'public');
+
+        // Publish config
+        $this->publishes([
+            __DIR__.'/../config/masteradmin.php' => config_path('masteradmin.php'),
+        ], 'config');
 
         // Đăng ký middleware
         $router = $this->app['router'];

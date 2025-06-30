@@ -41,8 +41,15 @@ Sau đó cấu hình trong file `config/filesystems.php` như sau:
         'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
         'folder' => env('GOOGLE_DRIVE_FOLDER'),
     ],
-]
+],
+'cloud' => env('FILESYSTEM_CLOUD', 'google'),
 ```
+
+> **Lưu ý:** Nếu gặp lỗi `Disk [google] does not have a configured driver`, hãy chắc chắn đã:
+> - Thêm cấu hình disk `google` vào file `config/filesystems.php` như trên.
+> - Đã cài đặt package `yaza/laravel-google-drive-storage`.
+> - Đặt biến môi trường `FILESYSTEM_CLOUD=google` trong file `.env`.
+> - Chạy lại lệnh `php artisan config:clear` để Laravel nhận cấu hình mới.
 
 ## Nguồn giao diện
 

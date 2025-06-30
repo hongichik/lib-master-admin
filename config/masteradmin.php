@@ -58,6 +58,12 @@ return [
                 'url' => '/master-admin/logs/view',
                 'active' => 'master-admin/logs*',
             ],
+            [
+                'text' => 'Backup',
+                'icon' => 'bi bi-hdd-stack',
+                'url' => '/master-admin/backup',
+                'active' => 'master-admin/backup*',
+            ],
         ],
     ],
 

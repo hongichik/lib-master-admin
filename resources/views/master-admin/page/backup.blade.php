@@ -39,7 +39,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-year-{{ $year }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-year-{{ $year }}" aria-expanded="false" aria-controls="collapse-year-{{ $year }}">
-                                {{ $year }}
+                                {{ $year }} ({{ count($days) }} days)
                             </button>
                         </h2>
                         <div id="collapse-year-{{ $year }}" class="accordion-collapse collapse" aria-labelledby="heading-year-{{ $year }}" data-bs-parent="#backupAccordion">
@@ -75,7 +75,9 @@
                     @endforeach
                 </div>
                 @else
-                <div class="alert alert-info mb-0">No backup files found on Google Drive.</div>
+                <div class="alert alert-info mb-0">
+                    No backup files found on Google Drive.
+                </div>
                 @endif
             </div>
         </div>
@@ -87,7 +89,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btnBackup = document.getElementById('btn-backup');
-    const btnUpload = document.getElementById('btn-upload');
     const backupType = document.getElementById('backup-type');
     let lastBackupType = 'database';
 
@@ -115,9 +116,25 @@ document.addEventListener('DOMContentLoaded', function() {
             btnBackup.disabled = false;
             btnBackup.innerHTML = 'Start Backup';
             if(data.success) {
-                btnUpload.disabled = false;
                 lastBackupType = backupType.value;
-                alert('Backup created: ' + (data.filename || 'Multiple files'));
+                if (data.filename) {
+                    alert('Backup created: ' + data.filename);
+                } else if (data.results) {
+                    // Handle backup all response
+                    let messages = [];
+                    if (data.results.database && data.results.database.filename) {
+                        messages.push('Database: ' + data.results.database.filename);
+                    }
+                    if (data.results.storage && data.results.storage.filename) {
+                        messages.push('Storage: ' + data.results.storage.filename);
+                    }
+                    if (data.results.full && data.results.full.filename) {
+                        messages.push('Full: ' + data.results.full.filename);
+                    }
+                    alert('Backups created:\n' + messages.join('\n'));
+                } else {
+                    alert('Backup completed successfully');
+                }
                 location.reload();
             } else {
                 alert('Backup failed: ' + (data.message || 'Unknown error'));
@@ -126,30 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             btnBackup.disabled = false;
             btnBackup.innerHTML = 'Start Backup';
             alert('Backup failed.');
-        });
-    });
-
-    btnUpload.addEventListener('click', function() {
-        btnUpload.disabled = true;
-        btnUpload.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Uploading...';
-        fetch('{{ route("master-admin.backup.upload") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ type: lastBackupType })
-        }).then(res => res.json())
-        .then(data => {
-            btnUpload.disabled = false;
-            if(data.success) {
-                alert('Uploaded to Google Drive: ' + data.filename);
-            } else {
-                alert('Upload failed: ' + (data.message || 'Unknown error'));
-            }
-        }).catch(() => {
-            btnUpload.disabled = false;
-            alert('Upload failed.');
         });
     });
 });

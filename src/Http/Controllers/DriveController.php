@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DriveController extends Controller
 {
@@ -100,17 +102,41 @@ class DriveController extends Controller
     public function testConnection()
     {
         try {
-            // This would typically use Laravel's storage facade with Google Drive
-            // But for simplicity, we'll just check if the credentials are set
-            if (!env('GOOGLE_DRIVE_CLIENT_ID') || !env('GOOGLE_DRIVE_CLIENT_SECRET') || !env('GOOGLE_DRIVE_REFRESH_TOKEN')) {
-                throw new \Exception('Google Drive credentials are not fully configured');
-            }
+            $disk = Storage::disk('google');
             
-            return redirect()->back()
-                ->with('success', 'Google Drive credentials are configured correctly');
+            // Try to list contents to test connection
+            $contents = $disk->files('/');
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Google Drive connection successful!',
+                'files_count' => count($contents)
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Google Drive connection test failed: ' . $e->getMessage());
+            Log::error('Google Drive test failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Connection failed: ' . $e->getMessage()
+            ]);
         }
+    }
+
+    protected function updateEnvFile($data)
+    {
+        $envFile = base_path('.env');
+        $envContent = file_get_contents($envFile);
+
+        foreach ($data as $key => $value) {
+            $pattern = "/^{$key}=.*$/m";
+            $replacement = "{$key}={$value}";
+
+            if (preg_match($pattern, $envContent)) {
+                $envContent = preg_replace($pattern, $replacement, $envContent);
+            } else {
+                $envContent .= "\n{$replacement}";
+            }
+        }
+
+        file_put_contents($envFile, $envContent);
     }
 }

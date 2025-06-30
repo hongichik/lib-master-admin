@@ -5,53 +5,124 @@ namespace Hongdev\MasterAdmin\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 
 class BackupController extends Controller
 {
     public function index()
     {
-        // Lấy danh sách file backup từ Google Drive, nhóm theo năm/ngày
-        $disk = Storage::disk('google');
-        $rootFolder = 'backup';
-        $years = $disk->directories($rootFolder);
-
-        $backups = [];
-
-        foreach ($years as $yearFolder) {
-            $year = basename($yearFolder);
-            $days = $disk->directories($yearFolder);
-            foreach ($days as $dayFolder) {
-                $date = basename($dayFolder); // mm-dd
-                $files = collect($disk->files($dayFolder))
-                    ->filter(function($file) {
-                        return preg_match('/backup_(db|storage|full)_.*\.(sql|zip)$/', basename($file));
-                    })
-                    ->sortByDesc(function($file) use ($disk) {
-                        return $disk->lastModified($file);
-                    })
-                    ->map(function($file) use ($disk) {
-                        return [
-                            'name' => basename($file),
-                            'download_url' => method_exists($disk, 'url') ? $disk->url($file) : '#',
-                        ];
-                    })->toArray();
-
-                if (!empty($files)) {
-                    $backups[$year][$date] = $files;
+        try {
+            $disk = Storage::disk('google');
+            $backups = [];
+            
+            // Recursively get all files from all directories
+            $allFiles = $this->getAllFilesRecursively($disk, '');
+            
+            // Remove duplicates and filter backup files
+            $allFiles = array_unique($allFiles);
+            
+            // Filter backup files and organize them
+            foreach ($allFiles as $file) {
+                $fileName = basename($file);
+                
+                // Check if it's a backup file
+                if (preg_match('/backup_(db|storage|full)_(\d{4})(\d{2})(\d{2})_\d{6}\.(sql|zip)$/', $fileName, $matches)) {
+                    $year = $matches[2];
+                    $month = $matches[3];
+                    $day = $matches[4];
+                    $date = $month . '-' . $day;
+                    
+                    $backups[$year][$date][] = [
+                        'name' => $fileName,
+                        'download_url' => '#', // Will implement proper download later
+                        'path' => $file,
+                        'size' => $this->getFileSize($disk, $file)
+                    ];
                 }
             }
-        }
-
-        // Sắp xếp năm giảm dần, ngày giảm dần
-        krsort($backups);
-        foreach ($backups as &$days) {
-            krsort($days);
+            
+            // Sort years and dates
+            krsort($backups);
+            foreach ($backups as &$days) {
+                krsort($days);
+                // Sort files within each day by name desc
+                foreach ($days as &$files) {
+                    usort($files, function($a, $b) {
+                        return strcmp($b['name'], $a['name']);
+                    });
+                }
+            }
+            
+        } catch (\Exception $e) {
+            $backups = [];
         }
 
         return view('master-admin::master-admin.page.backup', [
             'backups' => $backups
         ]);
+    }
+
+    private function getAllFilesRecursively($disk, $directory = '')
+    {
+        $allFiles = [];
+        
+        try {
+            // Get files in current directory
+            $files = $disk->files($directory);
+            $allFiles = array_merge($allFiles, $files);
+            
+            // Get subdirectories
+            $directories = $disk->directories($directory);
+            
+            // Recursively get files from subdirectories
+            foreach ($directories as $subDir) {
+                $subFiles = $this->getAllFilesRecursively($disk, $subDir);
+                $allFiles = array_merge($allFiles, $subFiles);
+            }
+            
+        } catch (\Exception $e) {
+            // Ignore error
+        }
+        
+        // Remove duplicates before returning
+        return array_unique($allFiles);
+    }
+
+    private function manuallyCheckBackupStructure($disk, &$allFiles)
+    {
+        try {
+            // Manually check common backup paths
+            $possiblePaths = [
+                'backup',
+                'backup/2025',
+                'backup/2025/06-30',
+                '2025',
+                '2025/06-30'
+            ];
+            
+            foreach ($possiblePaths as $path) {
+                try {
+                    if ($disk->directoryExists($path)) {
+                        $files = $disk->files($path);
+                        $allFiles = array_merge($allFiles, $files);
+                    }
+                } catch (\Exception $e) {
+                    // Ignore error
+                }
+            }
+        } catch (\Exception $e) {
+            // Ignore error
+        }
+    }
+
+    private function getFileSize($disk, $file)
+    {
+        try {
+            return $disk->size($file);
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     protected function uploadAndRotate($localPath, $type)

@@ -4,10 +4,6 @@
 
 @section('page_title', 'Google Drive Configuration')
 
-@section('breadcrumbs')
-<li class="breadcrumb-item"><a href="{{ url('master-admin') }}">Home</a></li>
-<li class="breadcrumb-item active">Google Drive Configuration</li>
-@endsection
 
 @section('content')
 <div class="row">
@@ -89,7 +85,6 @@
                             <li>Create OAuth consent screen (external)</li>
                             <li>Create OAuth 2.0 credentials (Web application)</li>
                             <li>Use the provided client ID and secret</li>
-                            <li>Set up the redirect URI to: <code>{{ url('master-admin/drive/callback') }}</code></li>
                             <li>Get refresh token using OAuth flow</li>
                         </ol>
                     </div>

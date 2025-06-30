@@ -147,7 +147,7 @@
             });
             
             // Make sure alerts are visible and styled correctly
-            document.querySelectorAll('.alert').forEach(alert => {
+            document.querySelectorAll('.notifications .alert').forEach(alert => {
                 console.log('Alert found:', alert);
                 // Ensure alerts are visible with correct styling
                 alert.style.display = 'block';

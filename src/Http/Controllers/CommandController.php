@@ -102,8 +102,28 @@ class CommandController extends Controller
                     break;
                     
                 case 'down':
-                    Artisan::call('down');
-                    $result = 'Application is now in maintenance mode';
+                    $params = [];
+    
+                    // If a secret token is provided, use it
+                    if ($request->has('secret')) {
+                        $params['--secret'] = $request->get('secret');
+        
+                        // Store the token in session for future use
+                        session(['maintenance_bypass_token' => $request->get('secret')]);
+        
+                        $result = 'Application is now in maintenance mode. You can bypass it using: ' . 
+                                  url('/') . '?secret=' . $request->get('secret');
+                    } else {
+                        Artisan::call('down');
+                        $result = 'Application is now in maintenance mode';
+                    }
+        
+                    // Ensure we pass the parameters if they exist
+                    if (!empty($params)) {
+                        Artisan::call('down', $params);
+                    } else {
+                        Artisan::call('down');
+                    }
                     break;
                     
                 case 'up':

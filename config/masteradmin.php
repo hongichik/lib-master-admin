@@ -28,35 +28,39 @@ return [
                 'active' => 'master-admin',
             ],
             [
-                'text' => 'Users',
-                'icon' => 'bi bi-people-fill',
+                'text' => 'Settings',
+                'icon' => 'bi bi-gear-fill',
+                'active' => 'master-admin/settings*',
                 'submenu' => [
                     [
-                        'text' => 'All Users',
-                        'icon' => 'bi bi-circle',
-                        'url' => '/admin/users',
+                        'text' => 'Database',
+                        'icon' => 'bi bi-database-fill',
+                        'url' => '/master-admin/settings/database/config',
+                        'active' => 'master-admin/settings/database/*',
+                    ],
+                    [
+                        'text' => 'Mail Configuration',
+                        'icon' => 'bi bi-envelope',
+                        'url' => '/master-admin/settings/mail/config',
+                        'active' => 'master-admin/settings/mail*',
+                    ],
+                    [
+                        'text' => 'Google Drive',
+                        'icon' => 'bi bi-cloud-arrow-up',
+                        'url' => '/master-admin/settings/drive/config',
+                        'active' => 'master-admin/settings/drive*',
                     ],
                 ],
             ],
             [
-                'text' => 'Settings',
-                'icon' => 'bi bi-gear-fill',
-                'submenu' => [
-                    [
-                        'text' => 'General',
-                        'icon' => 'bi bi-circle',
-                        'url' => '/admin/settings/general',
-                    ],
-                    [
-                        'text' => 'Security',
-                        'icon' => 'bi bi-circle',
-                        'url' => '/admin/settings/security',
-                    ],
-                ],
+                'text' => 'Logs',
+                'icon' => 'bi bi-file-text-fill',
+                'url' => '/master-admin/logs/view',
+                'active' => 'master-admin/logs*',
             ],
         ],
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Route Configuration
@@ -66,7 +70,7 @@ return [
     |
     */
     'route' => [
-        'prefix' => 'admin',
-        'middleware' => ['web', 'auth', 'master-admin'],
+        'prefix' => 'master-admin',
+        'middleware' => ['web', 'master-admin'],
     ],
 ];

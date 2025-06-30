@@ -4,18 +4,10 @@
 
 @section('page_title', 'Database Configuration')
 
-@section('breadcrumbs')
-<li class="breadcrumb-item"><a href="{{ url('master-admin') }}">Home</a></li>
-<li class="breadcrumb-item active">Database Configuration</li>
-@endsection
-
 @section('content')
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Configure Database Connection</h5>
-            </div>
             <div class="card-body">
                 <form action="{{ url('master-admin/database/config') }}" method="POST">
                     @csrf

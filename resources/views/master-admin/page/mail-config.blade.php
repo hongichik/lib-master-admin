@@ -14,7 +14,7 @@
     <div class="col-md-12 mx-auto">
         <div class="card">
             <div class="card-body">
-                <form action="{{ url('master-admin/mail/config') }}" method="POST">
+                <form action="{{ url('master-admin/settings/mail/config') }}" method="POST">
                     @csrf
                     
                     <div class="mb-3">

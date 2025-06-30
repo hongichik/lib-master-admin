@@ -20,6 +20,30 @@ composer require hongdev/master-admin
 - Đăng ký ServiceProvider nếu Laravel không tự động phát hiện.
 - Truy cập các route mẫu hoặc tuỳ chỉnh theo nhu cầu dự án.
 
+### Lưu ý khi sử dụng Google Drive
+
+Để sử dụng Google Drive làm disk, cần cài đặt thêm package:
+
+```bash
+composer require yaza/laravel-google-drive-storage
+```
+
+Sau đó cấu hình trong file `config/filesystems.php` như sau:
+
+```php
+'disks' => [
+    // ...existing code...
+    'google' => [
+        'driver' => 'google',
+        'clientId' => env('GOOGLE_DRIVE_CLIENT_ID'),
+        'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
+        'accessToken' => env('GOOGLE_DRIVE_ACCESS_TOKEN'), // optional
+        'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
+        'folder' => env('GOOGLE_DRIVE_FOLDER'),
+    ],
+]
+```
+
 ## Nguồn giao diện
 
 Giao diện sử dụng: [AdminLTE by ColorlibHQ](https://github.com/ColorlibHQ/AdminLTE#)

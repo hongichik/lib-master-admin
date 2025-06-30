@@ -8,6 +8,7 @@
 - Cấu hình nhanh các trang quản trị cho dự án Laravel.
 - Hỗ trợ một số giao diện người dùng mẫu, tiện lợi cho phát triển nhanh.
 - Dễ dàng mở rộng và tuỳ chỉnh theo nhu cầu.
+- Tích hợp sẵn Google Drive storage để backup và lưu trữ file.
 
 ## Cài đặt
 
@@ -20,36 +21,30 @@ composer require hongdev/master-admin
 - Đăng ký ServiceProvider nếu Laravel không tự động phát hiện.
 - Truy cập các route mẫu hoặc tuỳ chỉnh theo nhu cầu dự án.
 
-### Lưu ý khi sử dụng Google Drive
+### Cấu hình Google Drive
 
-Để sử dụng Google Drive làm disk, cần cài đặt thêm package:
+Thư viện đã tích hợp sẵn Google Drive storage. Chỉ cần thêm các biến môi trường sau vào file `.env`:
 
-```bash
-composer require yaza/laravel-google-drive-storage
+```env
+FILESYSTEM_CLOUD=google
+GOOGLE_DRIVE_CLIENT_ID=your_client_id
+GOOGLE_DRIVE_CLIENT_SECRET=your_client_secret
+GOOGLE_DRIVE_REFRESH_TOKEN=your_refresh_token
+GOOGLE_DRIVE_FOLDER=your_folder_name
 ```
 
-Sau đó cấu hình trong file `config/filesystems.php` như sau:
 
-```php
-'disks' => [
-    // ...existing code...
-    'google' => [
-        'driver' => 'google',
-        'clientId' => env('GOOGLE_DRIVE_CLIENT_ID'),
-        'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
-        'accessToken' => env('GOOGLE_DRIVE_ACCESS_TOKEN'), // optional
-        'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
-        'folder' => env('GOOGLE_DRIVE_FOLDER'),
-    ],
-],
-'cloud' => env('FILESYSTEM_CLOUD', 'google'),
-```
+> **Lưu ý:** Thư viện sẽ tự động refresh access token khi cần thiết. Không cần cài đặt thêm package nào khác.
 
-> **Lưu ý:** Nếu gặp lỗi `Disk [google] does not have a configured driver`, hãy chắc chắn đã:
-> - Thêm cấu hình disk `google` vào file `config/filesystems.php` như trên.
-> - Đã cài đặt package `yaza/laravel-google-drive-storage`.
-> - Đặt biến môi trường `FILESYSTEM_CLOUD=google` trong file `.env`.
-> - Chạy lại lệnh `php artisan config:clear` để Laravel nhận cấu hình mới.
+### Hướng dẫn lấy Google Drive credentials
+
+1. Truy cập [Google Cloud Console](https://console.cloud.google.com)
+2. Tạo project mới hoặc chọn project có sẵn
+3. Bật Google Drive API
+4. Tạo OAuth consent screen (external)
+5. Tạo OAuth 2.0 credentials (Web application)
+6. Sử dụng client ID và secret được cấp
+7. Lấy refresh token thông qua OAuth flow
 
 ## Nguồn giao diện
 

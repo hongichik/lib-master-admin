@@ -17,8 +17,8 @@ return [
             'url' => '/master-admin',
         ],
         'theme' => [
-            'dark_mode' => true,
-            'class' => 'bg-body-secondary shadow',
+            'dark_mode' => false,
+            'class' => 'bg-body-tertiary shadow',
         ],
         'menu' => [
             [

@@ -12893,8 +12893,10 @@ textarea.form-control-lg {
   max-width: 1.5rem;
 }
 .sidebar-wrapper .sidebar-menu > .nav-item.menu-open .nav-link.active:not(:hover) {
-  --lte-sidebar-menu-active-bg: #cbcbcb1a;
+  --lte-sidebar-menu-active-bg:rgba(203, 203, 203, 0.41);
 }
+
+
 .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link:active, .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link:focus {
   color: var(--lte-sidebar-color);
 }
@@ -15441,3 +15443,15 @@ fieldset legend {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
+.notifications .alert {
+
+}
+
+.notifications {
+            position: fixed;
+    z-index: 9999;
+    right: 0;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+}

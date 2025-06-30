@@ -35,5 +35,12 @@ class MasterAdminServiceProvider extends ServiceProvider
         // Đăng ký middleware
         $router = $this->app['router'];
         $router->aliasMiddleware('master-admin', MasterAdminMiddleware::class);
+
+        // Ensure the middleware group has session handling
+        Route::middlewareGroup('master-admin', [
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Hongdev\MasterAdmin\Http\Middleware\MasterAdminMiddleware::class,
+        ]);
     }
 }

@@ -5,41 +5,58 @@ use Hongdev\MasterAdmin\Http\Controllers\MasterAdminController;
 use Hongdev\MasterAdmin\Http\Controllers\CommandController;
 use Hongdev\MasterAdmin\Http\Controllers\LogController;
 use Hongdev\MasterAdmin\Http\Controllers\SettingsController;
-use Hongdev\MasterAdmin\Http\Controllers\DatabaseController;
+use Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseController;
+use Hongdev\MasterAdmin\Http\Controllers\Settings\EnvironmentController;
+use Hongdev\MasterAdmin\Http\Controllers\Settings\MailController;
+use Hongdev\MasterAdmin\Http\Controllers\Settings\DriveController;
 use Hongdev\MasterAdmin\Http\Controllers\SystemController;
-use Hongdev\MasterAdmin\Http\Controllers\MailController;
-use Hongdev\MasterAdmin\Http\Controllers\DriveController;
 use Hongdev\MasterAdmin\Http\Controllers\BackupController;
 
 Route::middleware('master-admin')->prefix('master-admin')->group(function () {
     // Dashboard
-    Route::get('/', [MasterAdminController::class, 'index']);
+    Route::get('/', [MasterAdminController::class, 'index'])->name('master-admin.dashboard');
 
     // Artisan Commands
-    Route::get('/commands/{command}', [CommandController::class, 'executeCommand']);
+    Route::get('/commands/{command}', [CommandController::class, 'executeCommand'])->name('master-admin.commands.execute');
 
     // Logs
-    Route::get('/logs/view', [LogController::class, 'viewLogs']);
-    Route::get('/logs/clear', [LogController::class, 'clearLogs']);
+    Route::prefix('logs')->name('master-admin.logs.')->group(function () {
+        Route::get('/view', [LogController::class, 'viewLogs'])->name('view');
+        Route::get('/clear', [LogController::class, 'clearLogs'])->name('clear');
+    });
 
-    Route::prefix('settings')->group(function () {
-        Route::get('environment/{env}', [SettingsController::class, 'changeEnvironment']);
-        Route::get('debug/{mode}', [SettingsController::class, 'toggleDebugMode']);
+    // Settings
+    Route::prefix('settings')->name('master-admin.settings.')->group(function () {
+        // Main settings page
+        Route::get('/', [SettingsController::class, 'index'])->name('index');
+        
+        // Environment settings
+        Route::prefix('environment')->name('environment.')->group(function () {
+            Route::get('/', [EnvironmentController::class, 'index'])->name('index');
+            Route::get('/change/{env}', [EnvironmentController::class, 'change'])->name('change');
+            Route::get('/debug/{mode}', [EnvironmentController::class, 'debug'])->name('debug');
+        });
 
-        // Database configuration
-        Route::get('database/test-connection', [DatabaseController::class, 'testConnection']);
-        Route::get('database/config', [DatabaseController::class, 'showConfig'])->name('master-admin.database.config');
-        Route::post('database/config', [DatabaseController::class, 'updateConfig']);
+        // Database settings
+        Route::prefix('database')->name('database.')->group(function () {
+            Route::get('/', [DatabaseController::class, 'index'])->name('index');
+            Route::post('/', [DatabaseController::class, 'update'])->name('update');
+            Route::get('/test', [DatabaseController::class, 'test'])->name('test');
+        });
 
-        // Mail Configuration
-        Route::get('mail/config', [MailController::class, 'showConfig'])->name('master-admin.mail.config');
-        Route::post('mail/config', [MailController::class, 'updateConfig']);
-        Route::get('mail/test', [MailController::class, 'testMail']);
+        // Mail settings
+        Route::prefix('mail')->name('mail.')->group(function () {
+            Route::get('/', [MailController::class, 'index'])->name('index');
+            Route::post('/', [MailController::class, 'update'])->name('update');
+            Route::get('/test', [MailController::class, 'test'])->name('test');
+        });
 
-        // Google Drive Configuration
-        Route::get('drive/config', [DriveController::class, 'showConfig'])->name('master-admin.drive.config');
-        Route::post('drive/config', [DriveController::class, 'updateConfig']);
-        Route::get('drive/test', [DriveController::class, 'testConnection']);
+        // Google Drive settings
+        Route::prefix('drive')->name('drive.')->group(function () {
+            Route::get('/', [DriveController::class, 'index'])->name('index');
+            Route::post('/', [DriveController::class, 'update'])->name('update');
+            Route::get('/test', [DriveController::class, 'test'])->name('test');
+        });
     });
 
     // Backup

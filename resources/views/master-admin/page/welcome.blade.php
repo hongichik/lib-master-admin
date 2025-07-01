@@ -235,9 +235,9 @@
                                 <td class="d-flex justify-content-between align-items-center">
                                     <span>{{ app()->environment() }}</span>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ url('master-admin/settings/environment/local') }}" class="btn btn-outline-primary {{ app()->environment() === 'local' ? 'active' : '' }}">Local</a>
-                                        <a href="{{ url('master-admin/settings/environment/testing') }}" class="btn btn-outline-primary {{ app()->environment() === 'testing' ? 'active' : '' }}">Testing</a>
-                                        <a href="{{ url('master-admin/settings/environment/production') }}" class="btn btn-outline-primary {{ app()->environment() === 'production' ? 'active' : '' }}">Production</a>
+                                        <a href="{{ route('master-admin.settings.environment.change', 'local') }}" class="btn btn-outline-primary {{ app()->environment() === 'local' ? 'active' : '' }}">Local</a>
+                                        <a href="{{ route('master-admin.settings.environment.change', 'testing') }}" class="btn btn-outline-primary {{ app()->environment() === 'testing' ? 'active' : '' }}">Testing</a>
+                                        <a href="{{ route('master-admin.settings.environment.change', 'production') }}" class="btn btn-outline-primary {{ app()->environment() === 'production' ? 'active' : '' }}">Production</a>
                                     </div>
                                 </td>
                             </tr>
@@ -245,7 +245,7 @@
                                 <th>Debug Mode</th>
                                 <td class="d-flex justify-content-between align-items-center">
                                     <span>{{ config('app.debug') ? 'Enabled' : 'Disabled' }}</span>
-                                    <a href="{{ url('master-admin/settings/debug/' . (config('app.debug') ? 'off' : 'on')) }}" 
+                                    <a href="{{ route('master-admin.settings.environment.debug', config('app.debug') ? 'off' : 'on') }}" 
                                        class="btn btn-sm {{ config('app.debug') ? 'btn-warning' : 'btn-success' }}">
                                         {{ config('app.debug') ? 'Disable Debug Mode' : 'Enable Debug Mode' }}
                                     </a>
@@ -307,10 +307,10 @@
                             <tr>
                                 <th>Database Config</th>
                                 <td>
-                                    <a href="{{ url('master-admin/settings/database/test-connection') }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('master-admin.settings.database.test') }}" class="btn btn-sm btn-primary">
                                         <i class="bi bi-database-check"></i> Test Connection
                                     </a>
-                                    <a href="{{ url('master-admin/settings/database/config') }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('master-admin.settings.database.index') }}" class="btn btn-sm btn-info">
                                         <i class="bi bi-gear"></i> Configure Database
                                     </a>
                                 </td>
@@ -365,10 +365,10 @@
                             <tr>
                                 <th>Gmail Config</th>
                                 <td>
-                                    <a href="{{ url('master-admin/settings/mail/test') }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('master-admin.settings.mail.test') }}" class="btn btn-sm btn-primary">
                                         <i class="bi bi-envelope-check"></i> Test Mail
                                     </a>
-                                    <a href="{{ url('master-admin/settings/mail/config') }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('master-admin.settings.mail.index') }}" class="btn btn-sm btn-info">
                                         <i class="bi bi-gear"></i> Configure Gmail
                                     </a>
                                 </td>
@@ -418,10 +418,10 @@
                             <tr>
                                 <th>Google Drive Config</th>
                                 <td>
-                                    <a href="{{ url('master-admin/settings/drive/test') }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('master-admin.settings.drive.test') }}" class="btn btn-sm btn-primary">
                                         <i class="bi bi-cloud-check"></i> Test Connection
                                     </a>
-                                    <a href="{{ url('master-admin/settings/drive/config') }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('master-admin.settings.drive.index') }}" class="btn btn-sm btn-info">
                                         <i class="bi bi-gear"></i> Configure Drive
                                     </a>
                                 </td>

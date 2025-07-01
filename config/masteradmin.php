@@ -30,24 +30,31 @@ return [
             [
                 'text' => 'Settings',
                 'icon' => 'bi bi-gear-fill',
+                'url' => '/master-admin/settings',
                 'active' => 'master-admin/settings*',
                 'submenu' => [
                     [
+                        'text' => 'Environment',
+                        'icon' => 'bi bi-server',
+                        'url' => '/master-admin/settings/environment',
+                        'active' => 'master-admin/settings/environment*',
+                    ],
+                    [
                         'text' => 'Database',
                         'icon' => 'bi bi-database-fill',
-                        'url' => '/master-admin/settings/database/config',
-                        'active' => 'master-admin/settings/database/*',
+                        'url' => '/master-admin/settings/database',
+                        'active' => 'master-admin/settings/database*',
                     ],
                     [
                         'text' => 'Mail Configuration',
                         'icon' => 'bi bi-envelope',
-                        'url' => '/master-admin/settings/mail/config',
+                        'url' => '/master-admin/settings/mail',
                         'active' => 'master-admin/settings/mail*',
                     ],
                     [
                         'text' => 'Google Drive',
                         'icon' => 'bi bi-cloud-arrow-up',
-                        'url' => '/master-admin/settings/drive/config',
+                        'url' => '/master-admin/settings/drive',
                         'active' => 'master-admin/settings/drive*',
                     ],
                 ],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hongdev\MasterAdmin\Http\Controllers;
+namespace Hongdev\MasterAdmin\Http\Controllers\Settings;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -11,28 +11,11 @@ use Illuminate\Support\Facades\Artisan;
 class DatabaseController extends Controller
 {
     /**
-     * Test the database connection
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function testConnection()
-    {
-        try {
-            $connection = DB::connection()->getPdo();
-            $databaseName = DB::connection()->getDatabaseName();
-            
-            return redirect()->back()->with('success', "Successfully connected to database: {$databaseName}");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Database connection error: " . $e->getMessage());
-        }
-    }
-    
-    /**
      * Show database configuration form
      *
      * @return \Illuminate\View\View
      */
-    public function showConfig()
+    public function index()
     {
         $dbConfig = [
             'connection' => config('database.default'),
@@ -45,7 +28,7 @@ class DatabaseController extends Controller
         
         $drivers = ['mysql', 'pgsql', 'sqlite', 'sqlsrv'];
         
-        return view('master-admin::master-admin.page.database-config', [
+        return view('master-admin::master-admin.page.settings.database.index', [
             'config' => $dbConfig,
             'drivers' => $drivers
         ]);
@@ -57,7 +40,7 @@ class DatabaseController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateConfig(Request $request)
+    public function update(Request $request)
     {
         $request->validate([
             'connection' => 'required|in:mysql,pgsql,sqlite,sqlsrv',
@@ -97,12 +80,29 @@ class DatabaseController extends Controller
             // Clear config cache
             Artisan::call('config:clear');
             
-            return redirect()->route('master-admin.database.config')
+            return redirect()->route('master-admin.settings.database.index')
                            ->with('success', 'Database configuration updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()
                            ->with('error', 'Error updating database configuration: ' . $e->getMessage())
                            ->withInput();
+        }
+    }
+
+    /**
+     * Test the database connection
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function test()
+    {
+        try {
+            $connection = DB::connection()->getPdo();
+            $databaseName = DB::connection()->getDatabaseName();
+            
+            return redirect()->back()->with('success', "Successfully connected to database: {$databaseName}");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', "Database connection error: " . $e->getMessage());
         }
     }
 }

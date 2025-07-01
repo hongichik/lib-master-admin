@@ -139,12 +139,6 @@
     {{-- Session debugging script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Debug session values
-            console.log('Session data:', {
-                success: @json(session('success')),
-                error: @json(session('error')),
-                info: @json(session('info'))
-            });
             
             // Make sure alerts are visible and styled correctly
             document.querySelectorAll('.notifications .alert').forEach(alert => {

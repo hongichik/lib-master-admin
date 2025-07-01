@@ -73,14 +73,20 @@
                         @foreach($items as $item)
                             <div class="col-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                                 <div class="card h-100 file-item">
-                                    <div class="card-body text-center p-2">
+                                    @if($item['type'] === 'directory')
+                                        <a href="?disk={{ $disk }}&path={{ $item['path'] }}" class="card-body text-center p-2 text-decoration-none">
+                                    @elseif(in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md', 'env', 'log']))
+                                        <a href="{{ route('master-admin.settings.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" class="card-body text-center p-2 text-decoration-none">
+                                    @else
+                                        <div class="card-body text-center p-2">
+                                    @endif
                                         @if($item['type'] === 'directory')
-                                            <a href="?disk={{ $disk }}&path={{ $item['path'] }}" class="text-decoration-none">
+                                            <div class="">
                                                 <i class="bi bi-folder-fill text-primary display-4"></i>
                                                 <div class="mt-2">
                                                     <small class="text-truncate d-block">{{ $item['name'] }}</small>
                                                 </div>
-                                            </a>
+                                            </div>
                                         @else
                                             @php
                                                 $icon = match($item['extension']) {
@@ -101,34 +107,35 @@
                                                 <small class="text-muted">{{ number_format($item['size'] / 1024, 1) }}KB</small>
                                             </div>
                                         @endif
-                                    </div>
+                                    @if($item['type'] === 'directory' || in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md', 'env', 'log']))
+                                        </a>
+                                    @else
+                                        </div>
+                                    @endif
                                     
-                                    <!-- Action Dropdown -->
+                                    <!-- Action Icons -->
                                     <div class="card-footer p-1">
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle w-100" 
-                                                    data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                @if($item['type'] === 'file')
-                                                    <li><a class="dropdown-item" href="{{ route('master-admin.settings.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}">
-                                                        <i class="bi bi-eye"></i> View
-                                                    </a></li>
-                                                    @if(in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md']))
-                                                        <li><a class="dropdown-item" href="{{ route('master-admin.settings.file-manager.edit', ['path' => $item['path'], 'disk' => $disk]) }}">
-                                                            <i class="bi bi-pencil"></i> Edit
-                                                        </a></li>
-                                                    @endif
-                                                    <li><a class="dropdown-item" href="{{ route('master-admin.settings.file-manager.download', ['path' => $item['path'], 'disk' => $disk]) }}">
-                                                        <i class="bi bi-download"></i> Download
-                                                    </a></li>
+                                        <div class="btn-group w-100" role="group">
+                                            @if($item['type'] === 'file')
+                                                <a href="{{ route('master-admin.settings.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                   class="btn btn-sm btn-outline-info" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                @if(in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md', 'env', 'log']))
+                                                    <a href="{{ route('master-admin.settings.file-manager.edit', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                       class="btn btn-sm btn-outline-primary" title="Edit">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
                                                 @endif
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item text-danger" href="#" onclick="confirmDelete('{{ $item['name'] }}', '{{ $item['path'] }}')">
-                                                    <i class="bi bi-trash"></i> Delete
-                                                </a></li>
-                                            </ul>
+                                                <a href="{{ route('master-admin.settings.file-manager.download', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                   class="btn btn-sm btn-outline-success" title="Download">
+                                                    <i class="bi bi-download"></i>
+                                                </a>
+                                            @endif
+                                            <button type="button" class="btn btn-sm btn-outline-danger" title="Delete" 
+                                                    onclick="confirmDelete('{{ $item['name'] }}', '{{ $item['path'] }}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

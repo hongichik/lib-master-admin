@@ -5,7 +5,6 @@ namespace Hongdev\MasterAdmin\Http\Controllers\Settings;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileManagerController extends Controller
@@ -25,43 +24,40 @@ class FileManagerController extends Controller
         }
         
         try {
-            // Sử dụng Laravel Storage thay vì File facade
-            $storage = Storage::disk($disk);
+            $basePath = $this->getBasePath($disk);
+            $fullPath = $basePath . ($path ? DIRECTORY_SEPARATOR . $path : '');
             
             // Kiểm tra path có tồn tại không
-            if ($path && !$storage->exists($path)) {
+            if (!File::exists($fullPath)) {
                 $path = '';
+                $fullPath = $basePath;
             }
-            
-            $directories = $storage->directories($path);
-            $files = $storage->files($path);
             
             $items = [];
+            $scanDir = File::glob($fullPath . DIRECTORY_SEPARATOR . '*');
             
-            // Thêm directories
-            foreach ($directories as $dir) {
+            foreach ($scanDir as $item) {
+                $relativePath = str_replace($basePath . DIRECTORY_SEPARATOR, '', $item);
+                $isDirectory = File::isDirectory($item);
+                
                 $items[] = [
-                    'name' => basename($dir),
-                    'path' => $dir,
-                    'type' => 'directory',
-                    'size' => null,
-                    'modified' => null,
-                    'url' => null
+                    'name' => basename($item),
+                    'path' => $relativePath,
+                    'type' => $isDirectory ? 'directory' : 'file',
+                    'size' => $isDirectory ? null : File::size($item),
+                    'modified' => File::lastModified($item),
+                    'url' => $this->getFileUrl($disk, $relativePath),
+                    'extension' => $isDirectory ? null : pathinfo($item, PATHINFO_EXTENSION)
                 ];
             }
             
-            // Thêm files
-            foreach ($files as $file) {
-                $items[] = [
-                    'name' => basename($file),
-                    'path' => $file,
-                    'type' => 'file',
-                    'size' => $storage->size($file),
-                    'modified' => $storage->lastModified($file),
-                    'url' => $disk === 'public' ? Storage::url($file) : null,
-                    'extension' => pathinfo($file, PATHINFO_EXTENSION)
-                ];
-            }
+            // Sort: directories first, then files
+            usort($items, function($a, $b) {
+                if ($a['type'] !== $b['type']) {
+                    return $a['type'] === 'directory' ? -1 : 1;
+                }
+                return strcasecmp($a['name'], $b['name']);
+            });
             
             $breadcrumbs = $this->buildBreadcrumbs($path);
             
@@ -91,14 +87,15 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
-            $newPath = $request->path ? $request->path . '/' . $request->name : $request->name;
+            $basePath = $this->getBasePath($request->disk);
+            $currentPath = $basePath . ($request->path ? DIRECTORY_SEPARATOR . $request->path : '');
+            $newDirPath = $currentPath . DIRECTORY_SEPARATOR . $request->name;
             
-            if ($storage->exists($newPath)) {
+            if (File::exists($newDirPath)) {
                 return back()->with('error', 'Directory already exists');
             }
             
-            $storage->makeDirectory($newPath);
+            File::makeDirectory($newDirPath, 0755, true);
             
             return back()->with('success', 'Directory created successfully');
         } catch (\Exception $e) {
@@ -118,28 +115,24 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
+            $basePath = $this->getBasePath($request->disk);
+            $uploadPath = $basePath . ($request->path ? DIRECTORY_SEPARATOR . $request->path : '');
             $uploaded = 0;
             
             foreach ($request->file('files') as $file) {
                 $filename = $file->getClientOriginalName();
-                $path = $request->path ? $request->path . '/' . $filename : $filename;
+                $destinationPath = $uploadPath . DIRECTORY_SEPARATOR . $filename;
                 
                 // Tránh ghi đè file
                 $counter = 1;
-                $originalPath = $path;
-                while ($storage->exists($path)) {
-                    $info = pathinfo($originalPath);
-                    $path = ($request->path ? $request->path . '/' : '') . 
-                           $info['filename'] . '_' . $counter . '.' . $info['extension'];
+                while (File::exists($destinationPath)) {
+                    $info = pathinfo($filename);
+                    $newName = $info['filename'] . '_' . $counter . '.' . $info['extension'];
+                    $destinationPath = $uploadPath . DIRECTORY_SEPARATOR . $newName;
                     $counter++;
                 }
                 
-                $storage->putFileAs(
-                    $request->path ?: '', 
-                    $file, 
-                    basename($path)
-                );
+                $file->move($uploadPath, basename($destinationPath));
                 $uploaded++;
             }
             
@@ -160,18 +153,18 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
+            $basePath = $this->getBasePath($request->disk);
+            $fullPath = $basePath . DIRECTORY_SEPARATOR . $request->path;
             
-            if (!$storage->exists($request->path)) {
+            if (!File::exists($fullPath)) {
                 return back()->with('error', 'Item not found');
             }
             
-            // Kiểm tra nếu là directory
-            if ($storage->directories($request->path)) {
-                $storage->deleteDirectory($request->path);
+            if (File::isDirectory($fullPath)) {
+                File::deleteDirectory($fullPath);
                 $message = 'Directory deleted';
             } else {
-                $storage->delete($request->path);
+                File::delete($fullPath);
                 $message = 'File deleted';
             }
             
@@ -192,13 +185,14 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
+            $basePath = $this->getBasePath($request->disk);
+            $fullPath = $basePath . DIRECTORY_SEPARATOR . $request->path;
             
-            if (!$storage->exists($request->path)) {
+            if (!File::exists($fullPath) || File::isDirectory($fullPath)) {
                 return back()->with('error', 'File not found');
             }
             
-            return $storage->download($request->path);
+            return response()->download($fullPath);
         } catch (\Exception $e) {
             return back()->with('error', 'Download error: ' . $e->getMessage());
         }
@@ -215,26 +209,27 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
+            $basePath = $this->getBasePath($request->disk);
+            $fullPath = $basePath . DIRECTORY_SEPARATOR . $request->path;
             
-            if (!$storage->exists($request->path)) {
+            if (!File::exists($fullPath) || File::isDirectory($fullPath)) {
                 return back()->with('error', 'File not found');
             }
             
             $content = null;
-            $fileSize = $storage->size($request->path);
+            $fileSize = File::size($fullPath);
             $isTextFile = $this->isTextFile($request->path);
             
             // Chỉ đọc file text nhỏ hơn 1MB
             if ($isTextFile && $fileSize < 1048576) {
-                $content = $storage->get($request->path);
+                $content = File::get($fullPath);
             }
             
             $fileInfo = [
                 'name' => basename($request->path),
                 'size' => $fileSize,
-                'modified' => $storage->lastModified($request->path),
-                'mimeType' => $storage->mimeType($request->path),
+                'modified' => File::lastModified($fullPath),
+                'mimeType' => File::mimeType($fullPath),
                 'extension' => pathinfo($request->path, PATHINFO_EXTENSION)
             ];
             
@@ -271,13 +266,14 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
+            $basePath = $this->getBasePath($request->disk);
+            $fullPath = $basePath . DIRECTORY_SEPARATOR . $request->path;
             
-            if (!$storage->exists($request->path) || !$this->isTextFile($request->path)) {
+            if (!File::exists($fullPath) || !$this->isTextFile($request->path)) {
                 return back()->with('error', 'File cannot be edited');
             }
             
-            $content = $storage->get($request->path);
+            $content = File::get($fullPath);
             
             return view('master-admin::master-admin.page.settings.file-manager.edit', [
                 'content' => $content,
@@ -300,12 +296,46 @@ class FileManagerController extends Controller
         ]);
 
         try {
-            $storage = Storage::disk($request->disk);
-            $storage->put($request->path, $request->content);
+            $basePath = $this->getBasePath($request->disk);
+            $fullPath = $basePath . DIRECTORY_SEPARATOR . $request->path;
+            
+            File::put($fullPath, $request->content);
             
             return back()->with('success', 'File updated successfully');
         } catch (\Exception $e) {
             return back()->with('error', 'Update error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get base path for disk
+     */
+    private function getBasePath($disk)
+    {
+        switch ($disk) {
+            case 'public':
+                return public_path();
+            case 'storage':
+                return storage_path('app/public');
+            case 'local':
+                return base_path();
+            default:
+                return public_path();
+        }
+    }
+
+    /**
+     * Get file URL if accessible
+     */
+    private function getFileUrl($disk, $path)
+    {
+        switch ($disk) {
+            case 'public':
+                return url('/' . $path);
+            case 'storage':
+                return url('/storage/' . $path);
+            default:
+                return null;
         }
     }
 
@@ -335,31 +365,31 @@ class FileManagerController extends Controller
     private function getDiskInfo($disk)
     {
         $info = [];
-        
+
         try {
             switch ($disk) {
                 case 'public':
                     $info = [
-                        'name' => 'Public Folder',
+                        'name' => 'Public',
                         'path' => public_path(),
                         'url' => url('/'),
-                        'description' => 'Web accessible files (CSS, JS, Images, etc.)'
+                        'description' => 'Thư mục public/ - files có thể truy cập trực tiếp từ web (CSS, JS, images)'
                     ];
                     break;
                 case 'storage':
                     $info = [
-                        'name' => 'Storage Public',
+                        'name' => 'Storage',
                         'path' => storage_path('app/public'),
-                        'url' => Storage::url(''),
-                        'description' => 'Laravel storage disk (linked to public/storage)'
+                        'url' => url('/storage'),
+                        'description' => 'Thư mục storage/app/public - Laravel storage disk (được link tới public/storage)'
                     ];
                     break;
                 case 'local':
                     $info = [
-                        'name' => 'Storage Local',
-                        'path' => storage_path('app'),
+                        'name' => 'Local',
+                        'path' => base_path(),
                         'url' => null,
-                        'description' => 'Private Laravel files (not web accessible)'
+                        'description' => 'Thư mục gốc - files private không thể truy cập từ web'
                     ];
                     break;
             }

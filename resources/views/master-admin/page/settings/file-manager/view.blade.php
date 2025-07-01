@@ -11,7 +11,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">{{ $fileInfo['name'] }}</h5>
                 <div>
-                    <a href="{{ route('master-admin.settings.file-manager.download', ['file_path' => $filePath, 'disk' => $disk]) }}" 
+                    <a href="{{ route('master-admin.settings.file-manager.download', ['path' => $filePath, 'disk' => $disk]) }}" 
                        class="btn btn-success btn-sm">
                         <i class="bi bi-download"></i> Download
                     </a>
@@ -27,15 +27,23 @@
                     <div class="col-md-6">
                         <table class="table table-sm">
                             <tr><th>File Name:</th><td>{{ $fileInfo['name'] }}</td></tr>
-                            <tr><th>Size:</th><td>{{ \Illuminate\Support\Number::fileSize($fileInfo['size']) }}</td></tr>
-                            <tr><th>Type:</th><td>{{ $fileInfo['mime_type'] }}</td></tr>
+                            <tr><th>Size:</th><td>{{ number_format($fileInfo['size'] / 1024, 2) }} KB</td></tr>
+                            <tr><th>Type:</th><td>{{ $fileInfo['mimeType'] }}</td></tr>
+                            <tr><th>Extension:</th><td>{{ $fileInfo['extension'] ?: 'None' }}</td></tr>
                         </table>
                     </div>
                     <div class="col-md-6">
                         <table class="table table-sm">
                             <tr><th>Modified:</th><td>{{ date('Y-m-d H:i:s', $fileInfo['modified']) }}</td></tr>
-                            <tr><th>Readable:</th><td>{{ $fileInfo['readable'] ? 'Yes' : 'No' }}</td></tr>
-                            <tr><th>Writable:</th><td>{{ $fileInfo['writable'] ? 'Yes' : 'No' }}</td></tr>
+                            <tr><th>Is Text File:</th><td>{{ $isTextFile ? 'Yes' : 'No' }}</td></tr>
+                            @if($isTextFile && $fileInfo['size'] < 1048576)
+                                <tr><th>Actions:</th><td>
+                                    <a href="{{ route('master-admin.settings.file-manager.edit', ['path' => $filePath, 'disk' => $disk]) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                </td></tr>
+                            @endif
                         </table>
                     </div>
                 </div>
@@ -49,7 +57,11 @@
                 @else
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle me-2"></i>
-                        File content cannot be displayed (either too large or not a text file).
+                        @if(!$isTextFile)
+                            File content cannot be displayed (not a text file).
+                        @else
+                            File is too large to display (over 1MB).
+                        @endif
                     </div>
                 @endif
             </div>

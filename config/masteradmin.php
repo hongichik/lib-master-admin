@@ -57,6 +57,12 @@ return [
                         'url' => '/master-admin/settings/drive',
                         'active' => 'master-admin/settings/drive*',
                     ],
+                    [
+                        'text' => 'File Manager',
+                        'icon' => 'bi bi-folder',
+                        'url' => '/master-admin/settings/file-manager',
+                        'active' => 'master-admin/settings/file-manager*',
+                    ],
                 ],
             ],
             [

@@ -1,0 +1,59 @@
+@extends('master-admin::master-admin.layout.layout-master')
+
+@section('title', 'View File: ' . $fileInfo['name'])
+
+@section('page_title', 'View File: ' . $fileInfo['name'])
+
+@section('content')
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">{{ $fileInfo['name'] }}</h5>
+                <div>
+                    <a href="{{ route('master-admin.settings.file-manager.download', ['file_path' => $filePath, 'disk' => $disk]) }}" 
+                       class="btn btn-success btn-sm">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                    <a href="{{ route('master-admin.settings.file-manager.index', ['disk' => $disk, 'path' => dirname($filePath)]) }}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- File Information -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr><th>File Name:</th><td>{{ $fileInfo['name'] }}</td></tr>
+                            <tr><th>Size:</th><td>{{ \Illuminate\Support\Number::fileSize($fileInfo['size']) }}</td></tr>
+                            <tr><th>Type:</th><td>{{ $fileInfo['mime_type'] }}</td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr><th>Modified:</th><td>{{ date('Y-m-d H:i:s', $fileInfo['modified']) }}</td></tr>
+                            <tr><th>Readable:</th><td>{{ $fileInfo['readable'] ? 'Yes' : 'No' }}</td></tr>
+                            <tr><th>Writable:</th><td>{{ $fileInfo['writable'] ? 'Yes' : 'No' }}</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- File Content -->
+                @if($content !== null)
+                    <h6>File Content:</h6>
+                    <div class="bg-dark text-light p-3 rounded" style="max-height: 500px; overflow-y: auto;">
+                        <pre><code>{{ $content }}</code></pre>
+                    </div>
+                @else
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        File content cannot be displayed (either too large or not a text file).
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

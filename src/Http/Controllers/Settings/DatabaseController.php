@@ -105,4 +105,174 @@ class DatabaseController extends Controller
             return redirect()->back()->with('error', "Database connection error: " . $e->getMessage());
         }
     }
+
+    /**
+     * Drop all tables in the database
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function dropAllTables()
+    {
+        try {
+            $connection = config('database.default');
+            $driver = config("database.connections.{$connection}.driver");
+            
+            if ($driver === 'mysql') {
+                // Get all table names
+                $tables = DB::select('SHOW TABLES');
+                $tableColumn = 'Tables_in_' . config("database.connections.{$connection}.database");
+                
+                if (!empty($tables)) {
+                    // Disable foreign key checks
+                    DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+                    
+                    foreach ($tables as $table) {
+                        $tableName = $table->$tableColumn;
+                        DB::statement("DROP TABLE IF EXISTS `{$tableName}`");
+                    }
+                    
+                    // Re-enable foreign key checks
+                    DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+                }
+            } elseif ($driver === 'pgsql') {
+                // PostgreSQL
+                $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+                
+                foreach ($tables as $table) {
+                    DB::statement("DROP TABLE IF EXISTS \"{$table->tablename}\" CASCADE");
+                }
+            } elseif ($driver === 'sqlite') {
+                // SQLite
+                $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
+                
+                foreach ($tables as $table) {
+                    DB::statement("DROP TABLE IF EXISTS \"{$table->name}\"");
+                }
+            }
+            
+            return redirect()->back()
+                ->with('success', 'All tables dropped successfully')
+                ->with('active_tab', 'tools');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error dropping tables: ' . $e->getMessage())
+                ->with('active_tab', 'tools');
+        }
+    }
+
+    /**
+     * Show import SQL form
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showImport()
+    {
+        return view('master-admin::master-admin.page.settings.database.import');
+    }
+
+    /**
+     * Import SQL file
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function importSql(Request $request)
+    {
+        $request->validate([
+            'sql_file' => 'required|file|mimes:sql,txt|max:51200', // Max 50MB
+        ]);
+
+        try {
+            $file = $request->file('sql_file');
+            $sqlContent = file_get_contents($file->getPathname());
+            
+            // Split SQL content by semicolons to get individual statements
+            $statements = array_filter(
+                array_map('trim', explode(';', $sqlContent)),
+                function($statement) {
+                    return !empty($statement) && !preg_match('/^\s*--/', $statement);
+                }
+            );
+
+            $connection = config('database.default');
+            $driver = config("database.connections.{$connection}.driver");
+            
+            // Disable foreign key checks for MySQL
+            if ($driver === 'mysql') {
+                DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+            }
+
+            $executedCount = 0;
+            foreach ($statements as $statement) {
+                try {
+                    DB::statement($statement);
+                    $executedCount++;
+                } catch (\Exception $e) {
+                    \Log::warning("Failed to execute SQL statement: " . substr($statement, 0, 100) . "... Error: " . $e->getMessage());
+                }
+            }
+
+            // Re-enable foreign key checks for MySQL
+            if ($driver === 'mysql') {
+                DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            }
+
+            return redirect()->back()
+                ->with('success', "SQL file imported successfully. Executed {$executedCount} statements.")
+                ->with('active_tab', 'tools');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error importing SQL file: ' . $e->getMessage())
+                ->with('active_tab', 'tools');
+        }
+    }
+
+    /**
+     * Execute custom SQL query
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function executeQuery(Request $request)
+    {
+        $request->validate([
+            'sql_query' => 'required|string',
+        ]);
+
+        try {
+            $query = trim($request->sql_query);
+            
+            // Basic security check - prevent dangerous operations
+            $dangerousKeywords = ['DROP DATABASE', 'CREATE DATABASE', 'GRANT', 'REVOKE'];
+            foreach ($dangerousKeywords as $keyword) {
+                if (stripos($query, $keyword) !== false) {
+                    return redirect()->back()
+                        ->with('error', "Dangerous operation '{$keyword}' is not allowed.")
+                        ->with('active_tab', 'query')
+                        ->withInput();
+                }
+            }
+
+            if (stripos($query, 'SELECT') === 0) {
+                // For SELECT queries, return results
+                $results = DB::select($query);
+                return redirect()->back()
+                    ->with('success', 'Query executed successfully. Found ' . count($results) . ' results.')
+                    ->with('active_tab', 'query')
+                    ->withInput();
+            } else {
+                // For other queries (INSERT, UPDATE, DELETE, etc.)
+                $affected = DB::statement($query);
+                return redirect()->back()
+                    ->with('success', 'Query executed successfully.')
+                    ->with('active_tab', 'query')
+                    ->withInput();
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error executing query: ' . $e->getMessage())
+                ->with('active_tab', 'query')
+                ->withInput();
+        }
+    }
 }

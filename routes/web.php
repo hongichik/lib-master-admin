@@ -9,6 +9,8 @@ use Hongdev\MasterAdmin\Http\Controllers\Settings\EnvironmentController;
 use Hongdev\MasterAdmin\Http\Controllers\Settings\MailController;
 use Hongdev\MasterAdmin\Http\Controllers\Settings\DriveController;
 use Hongdev\MasterAdmin\Http\Controllers\BackupController;
+use Hongdev\MasterAdmin\Http\Controllers\FileManagerController;
+use Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController;
 
 Route::middleware('master-admin')->prefix('master-admin')->group(function () {
     // Dashboard
@@ -30,7 +32,7 @@ Route::middleware('master-admin')->prefix('master-admin')->group(function () {
     Route::prefix('settings')->name('master-admin.settings.')->group(function () {
         // Main settings page
         Route::get('/', [SettingsController::class, 'index'])->name('index');
-        
+
         // Environment settings
         Route::prefix('environment')->name('environment.')->group(function () {
             Route::get('/', [EnvironmentController::class, 'index'])->name('index');
@@ -47,20 +49,20 @@ Route::middleware('master-admin')->prefix('master-admin')->group(function () {
             Route::get('/import', [DatabaseController::class, 'showImport'])->name('import');
             Route::post('/import', [DatabaseController::class, 'importSql'])->name('import.post');
             Route::post('/execute', [DatabaseController::class, 'executeQuery'])->name('execute');
-            
+
             // Database Manager routes
             Route::prefix('manager')->name('manager.')->group(function () {
-                Route::get('/', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'index'])->name('index');
-                Route::get('/create-table', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'createTable'])->name('create-table');
-                Route::post('/create-table', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'storeTable'])->name('store-table');
-                Route::get('/table/{table}', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'showTable'])->name('table');
-                Route::delete('/table/{table}', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'dropTable'])->name('drop-table');
-                Route::get('/table/{table}/export', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'exportTable'])->name('export-table');
-                Route::get('/table/{table}/create', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'createRecord'])->name('create-record');
-                Route::post('/table/{table}/create', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'storeRecord'])->name('store-record');
-                Route::get('/table/{table}/edit/{id}', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'editRecord'])->name('edit-record');
-                Route::put('/table/{table}/edit/{id}', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'updateRecord'])->name('update-record');
-                Route::delete('/table/{table}/delete/{id}', [\Hongdev\MasterAdmin\Http\Controllers\Settings\DatabaseManagerController::class, 'deleteRecord'])->name('delete-record');
+                Route::get('/', [DatabaseManagerController::class, 'index'])->name('index');
+                Route::get('/create-table', [DatabaseManagerController::class, 'createTable'])->name('create-table');
+                Route::post('/create-table', [DatabaseManagerController::class, 'storeTable'])->name('store-table');
+                Route::get('/table/{table}', [DatabaseManagerController::class, 'showTable'])->name('table');
+                Route::delete('/table/{table}', [DatabaseManagerController::class, 'dropTable'])->name('drop-table');
+                Route::get('/table/{table}/export', [DatabaseManagerController::class, 'exportTable'])->name('export-table');
+                Route::get('/table/{table}/create', [DatabaseManagerController::class, 'createRecord'])->name('create-record');
+                Route::post('/table/{table}/create', [DatabaseManagerController::class, 'storeRecord'])->name('store-record');
+                Route::get('/table/{table}/edit/{id}', [DatabaseManagerController::class, 'editRecord'])->name('edit-record');
+                Route::put('/table/{table}/edit/{id}', [DatabaseManagerController::class, 'updateRecord'])->name('update-record');
+                Route::delete('/table/{table}/delete/{id}', [DatabaseManagerController::class, 'deleteRecord'])->name('delete-record');
             });
         });
 
@@ -77,17 +79,17 @@ Route::middleware('master-admin')->prefix('master-admin')->group(function () {
             Route::post('/', [DriveController::class, 'update'])->name('update');
             Route::get('/test', [DriveController::class, 'test'])->name('test');
         });
+    });
 
-        // File Manager
-        Route::prefix('file-manager')->name('file-manager.')->group(function () {
-            Route::get('/', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'index'])->name('index');
-            Route::post('/create-directory', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'createDirectory'])->name('create-directory');
-            Route::post('/upload', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'upload'])->name('upload');
-            Route::delete('/delete', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'delete'])->name('delete');
-            Route::get('/download', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'download'])->name('download');
-            Route::get('/view', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'view'])->name('view');
-            Route::match(['GET', 'POST'], '/edit', [\Hongdev\MasterAdmin\Http\Controllers\Settings\FileManagerController::class, 'edit'])->name('edit');
-        });
+    // File Manager
+    Route::prefix('file-manager')->name('master-admin.file-manager.')->group(function () {
+        Route::get('/', [FileManagerController::class, 'index'])->name('index');
+        Route::post('/create-directory', [FileManagerController::class, 'createDirectory'])->name('create-directory');
+        Route::post('/upload', [FileManagerController::class, 'upload'])->name('upload');
+        Route::delete('/delete', [FileManagerController::class, 'delete'])->name('delete');
+        Route::get('/download', [FileManagerController::class, 'download'])->name('download');
+        Route::get('/view', [FileManagerController::class, 'view'])->name('view');
+        Route::match(['GET', 'POST'], '/edit', [FileManagerController::class, 'edit'])->name('edit');
     });
 
     // Backup

@@ -26,12 +26,13 @@ class MasterAdminServiceProvider extends ServiceProvider
         // Publish assets
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/master-admin'),
-        ], 'public');
+            __DIR__ . '/../public/favicon.ico' => public_path('favicon.ico'),
+        ], 'master-admin-public');
 
-        // Publish config
         $this->publishes([
-            __DIR__ . '/../config/masteradmin.php' => config_path('masteradmin.php'),
-        ], 'config');
+            __DIR__ . '/../www' => base_path(),
+        ], 'master-admin-environment');
+
 
         // Đăng ký middleware
         $router = $this->app['router'];
@@ -54,7 +55,7 @@ class MasterAdminServiceProvider extends ServiceProvider
     protected function registerGoogleDriveDisk()
     {
         $googleConfig = config('masteradmin.google');
-        
+
         // Add google disk to filesystems config
         config([
             'filesystems.disks.google' => [
@@ -85,7 +86,7 @@ class MasterAdminServiceProvider extends ServiceProvider
                 // Always get fresh access token instead of using config
                 try {
                     $googleConfig = config('masteradmin.google');
-                    
+
                     $response = \Illuminate\Support\Facades\Http::asForm()->post('https://oauth2.googleapis.com/token', [
                         'client_id' => $googleConfig['clientId'],
                         'client_secret' => $googleConfig['clientSecret'],

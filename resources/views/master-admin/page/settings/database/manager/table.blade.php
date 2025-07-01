@@ -9,7 +9,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">{{ $table }} ({{ $data->total() }} records)</h5>
+                <div>
+                    <span class="text-muted">({{ $data->total() }} records)</span>
+                </div>
                 <div>
                     <a href="{{ route('master-admin.settings.database.manager.create-record', $table) }}" class="btn btn-success btn-sm">
                         <i class="bi bi-plus"></i> Insert Record

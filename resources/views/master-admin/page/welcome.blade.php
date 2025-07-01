@@ -207,6 +207,62 @@
     </div>
 </div>
 
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Package Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url('master-admin/commands/vendor-publish-all') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-box-seam"></i> Publish All Vendor Assets
+                    </a>
+                    <a href="{{ url('master-admin/commands/publish-master-admin-public') }}" class="btn btn-outline-info">
+                        <i class="bi bi-folder-plus"></i> Publish Master Admin Assets
+                    </a>
+                    <a href="{{ url('master-admin/commands/publish-master-admin-environment') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-gear-wide-connected"></i> Publish Master Admin Environment Files
+                    </a>
+                    <a href="{{ url('master-admin/commands/package-discover') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i> Discover Packages
+                    </a>
+                    <a href="{{ url('master-admin/commands/composer-dump-autoload') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-repeat"></i> Dump Composer Autoload
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Queue Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url('master-admin/commands/queue-restart') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-clockwise"></i> Restart Queue Workers
+                    </a>
+                    <a href="{{ url('master-admin/commands/queue-retry-all') }}" class="btn btn-outline-success">
+                        <i class="bi bi-arrow-repeat"></i> Retry All Failed Jobs
+                    </a>
+                    <a href="{{ url('master-admin/commands/queue-clear') }}" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i> Clear Failed Jobs
+                    </a>
+                    <a href="{{ url('master-admin/commands/schedule-list') }}" class="btn btn-outline-info">
+                        <i class="bi bi-list-task"></i> List Scheduled Tasks
+                    </a>
+                    <a href="{{ url('master-admin/commands/schedule-run') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-play-circle"></i> Run Scheduled Tasks
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="row mt-4">
     <div class="col-md-12">

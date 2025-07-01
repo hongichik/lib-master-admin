@@ -8,9 +8,6 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Create New Table</h5>
-            </div>
             <div class="card-body">
                 <form action="{{ route('master-admin.settings.database.manager.store-table') }}" method="POST">
                     @csrf

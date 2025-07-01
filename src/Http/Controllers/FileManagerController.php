@@ -1,6 +1,6 @@
 <?php
 
-namespace Hongdev\MasterAdmin\Http\Controllers\Settings;
+namespace Hongdev\MasterAdmin\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -61,7 +61,7 @@ class FileManagerController extends Controller
             
             $breadcrumbs = $this->buildBreadcrumbs($path);
             
-            return view('master-admin::master-admin.page.settings.file-manager.index', [
+            return view('master-admin::master-admin.page.file-manager.index', [
                 'items' => $items,
                 'currentPath' => $path,
                 'disk' => $disk,
@@ -70,7 +70,7 @@ class FileManagerController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            return redirect()->route('master-admin.settings.file-manager.index')
+            return redirect()->route('master-admin.file-manager.index')
                            ->with('error', 'Error: ' . $e->getMessage());
         }
     }
@@ -233,7 +233,7 @@ class FileManagerController extends Controller
                 'extension' => pathinfo($request->path, PATHINFO_EXTENSION)
             ];
             
-            return view('master-admin::master-admin.page.settings.file-manager.view', [
+            return view('master-admin::master-admin.page.file-manager.view', [
                 'fileInfo' => $fileInfo,
                 'content' => $content,
                 'filePath' => $request->path,
@@ -275,7 +275,7 @@ class FileManagerController extends Controller
             
             $content = File::get($fullPath);
             
-            return view('master-admin::master-admin.page.settings.file-manager.edit', [
+            return view('master-admin::master-admin.page.file-manager.edit', [
                 'content' => $content,
                 'filePath' => $request->path,
                 'disk' => $request->disk,
@@ -373,7 +373,7 @@ class FileManagerController extends Controller
                         'name' => 'Public',
                         'path' => public_path(),
                         'url' => url('/'),
-                        'description' => 'Thư mục public/ - files có thể truy cập trực tiếp từ web (CSS, JS, images)'
+                        'description' => 'Public folder - Web accessible files (CSS, JS, images)'
                     ];
                     break;
                 case 'storage':
@@ -381,7 +381,7 @@ class FileManagerController extends Controller
                         'name' => 'Storage',
                         'path' => storage_path('app/public'),
                         'url' => url('/storage'),
-                        'description' => 'Thư mục storage/app/public - Laravel storage disk (được link tới public/storage)'
+                        'description' => 'Storage/app/public - Laravel storage disk (linked to public/storage)'
                     ];
                     break;
                 case 'local':
@@ -389,7 +389,7 @@ class FileManagerController extends Controller
                         'name' => 'Local',
                         'path' => base_path(),
                         'url' => null,
-                        'description' => 'Thư mục gốc - files private không thể truy cập từ web'
+                        'description' => 'Project root directory - Private files not accessible from web'
                     ];
                     break;
             }

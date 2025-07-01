@@ -9,13 +9,12 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">{{ $fileInfo['name'] }}</h5>
                 <div>
-                    <a href="{{ route('master-admin.settings.file-manager.download', ['path' => $filePath, 'disk' => $disk]) }}" 
+                    <a href="{{ route('master-admin.file-manager.download', ['path' => $filePath, 'disk' => $disk]) }}" 
                        class="btn btn-success btn-sm">
                         <i class="bi bi-download"></i> Download
                     </a>
-                    <a href="{{ route('master-admin.settings.file-manager.index', ['disk' => $disk, 'path' => dirname($filePath)]) }}" 
+                    <a href="{{ route('master-admin.file-manager.index', ['disk' => $disk, 'path' => dirname($filePath)]) }}" 
                        class="btn btn-secondary btn-sm">
                         <i class="bi bi-arrow-left"></i> Back
                     </a>
@@ -38,7 +37,7 @@
                             <tr><th>Is Text File:</th><td>{{ $isTextFile ? 'Yes' : 'No' }}</td></tr>
                             @if($isTextFile && $fileInfo['size'] < 1048576)
                                 <tr><th>Actions:</th><td>
-                                    <a href="{{ route('master-admin.settings.file-manager.edit', ['path' => $filePath, 'disk' => $disk]) }}" 
+                                    <a href="{{ route('master-admin.file-manager.edit', ['path' => $filePath, 'disk' => $disk]) }}" 
                                        class="btn btn-sm btn-primary">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>

@@ -3,9 +3,9 @@
     {{-- Sidebar Brand --}}
     <div class="sidebar-brand">
         <a href="{{ url(config('masteradmin.sidebar.brand.url', '/admin')) }}" class="brand-link">
-            <img src="{{ asset(config('masteradmin.sidebar.brand.logo', 'vendor/master-admin/assets/img/AdminLTELogo.png')) }}" 
+            <img src="{{ asset(config('masteradmin.sidebar.brand.logo', 'vendor/master-admin/assets/img/logoIT.png')) }}" 
                  alt="{{ config('masteradmin.sidebar.brand.text', 'Admin') }} Logo" 
-                 class="brand-image opacity-75 shadow">
+                 class="brand-image">
             <span class="brand-text fw-light">{{ config('masteradmin.sidebar.brand.text', 'Master Admin') }}</span>
         </a>
     </div>

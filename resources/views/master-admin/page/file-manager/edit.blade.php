@@ -8,15 +8,16 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0">{{ $fileName }}</h5>
-                <a href="{{ route('master-admin.settings.file-manager.index', ['disk' => $disk, 'path' => dirname($filePath)]) }}" 
-                   class="btn btn-secondary btn-sm">
-                    <i class="bi bi-arrow-left"></i> Back
-                </a>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{{ route('master-admin.file-manager.index', ['disk' => $disk, 'path' => dirname($filePath)]) }}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('master-admin.settings.file-manager.edit') }}" method="POST">
+                <form action="{{ route('master-admin.file-manager.edit') }}" method="POST">
                     @csrf
                     <input type="hidden" name="path" value="{{ $filePath }}">
                     <input type="hidden" name="disk" value="{{ $disk }}">
@@ -26,7 +27,7 @@
                     </div>
                     
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('master-admin.settings.file-manager.view', ['path' => $filePath, 'disk' => $disk]) }}" 
+                        <a href="{{ route('master-admin.file-manager.view', ['path' => $filePath, 'disk' => $disk]) }}" 
                            class="btn btn-info">
                             <i class="bi bi-eye"></i> View
                         </a>

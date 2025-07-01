@@ -76,7 +76,7 @@
                                     @if($item['type'] === 'directory')
                                         <a href="?disk={{ $disk }}&path={{ $item['path'] }}" class="card-body text-center p-2 text-decoration-none">
                                     @elseif(in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md', 'env', 'log']))
-                                        <a href="{{ route('master-admin.settings.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" class="card-body text-center p-2 text-decoration-none">
+                                        <a href="{{ route('master-admin.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" class="card-body text-center p-2 text-decoration-none">
                                     @else
                                         <div class="card-body text-center p-2">
                                     @endif
@@ -117,17 +117,17 @@
                                     <div class="card-footer p-1">
                                         <div class="btn-group w-100" role="group">
                                             @if($item['type'] === 'file')
-                                                <a href="{{ route('master-admin.settings.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                <a href="{{ route('master-admin.file-manager.view', ['path' => $item['path'], 'disk' => $disk]) }}" 
                                                    class="btn btn-sm btn-outline-info" title="View">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 @if(in_array($item['extension'], ['txt', 'php', 'js', 'css', 'html', 'json', 'md', 'env', 'log']))
-                                                    <a href="{{ route('master-admin.settings.file-manager.edit', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                    <a href="{{ route('master-admin.file-manager.edit', ['path' => $item['path'], 'disk' => $disk]) }}" 
                                                        class="btn btn-sm btn-outline-primary" title="Edit">
                                                         <i class="bi bi-pencil"></i>
                                                     </a>
                                                 @endif
-                                                <a href="{{ route('master-admin.settings.file-manager.download', ['path' => $item['path'], 'disk' => $disk]) }}" 
+                                                <a href="{{ route('master-admin.file-manager.download', ['path' => $item['path'], 'disk' => $disk]) }}" 
                                                    class="btn btn-sm btn-outline-success" title="Download">
                                                     <i class="bi bi-download"></i>
                                                 </a>
@@ -156,7 +156,7 @@
                 <h5 class="modal-title">Upload Files</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="{{ route('master-admin.settings.file-manager.upload') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('master-admin.file-manager.upload') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="path" value="{{ $currentPath }}">
@@ -184,7 +184,7 @@
                 <h5 class="modal-title">Create Folder</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="{{ route('master-admin.settings.file-manager.create-directory') }}" method="POST">
+            <form action="{{ route('master-admin.file-manager.create-directory') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="path" value="{{ $currentPath }}">
@@ -217,7 +217,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="POST" action="{{ route('master-admin.settings.file-manager.delete') }}">
+                <form id="deleteForm" method="POST" action="{{ route('master-admin.file-manager.delete') }}">
                     @csrf
                     @method('DELETE')
                     <input type="hidden" name="disk" value="{{ $disk }}">

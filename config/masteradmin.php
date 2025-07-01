@@ -12,8 +12,8 @@ return [
     'sidebar' => [
         'brand' => [
             'text' => 'Master Admin',
-            'logo' => 'vendor/master-admin/assets/img/AdminLTELogo.png',
-            'logo_mini' => 'vendor/master-admin/assets/img/AdminLTELogo.png',
+            'logo' => 'vendor/master-admin/assets/img/logoIT.png',
+            'logo_mini' => 'vendor/master-admin/assets/img/logoIT.png',
             'url' => '/master-admin',
         ],
         'theme' => [
@@ -30,7 +30,7 @@ return [
             [
                 'text' => 'Settings',
                 'icon' => 'bi bi-gear-fill',
-                'url' => '/master-admin/settings',
+                // 'url' => '/master-admin/settings',
                 'active' => 'master-admin/settings*',
                 'submenu' => [
                     [
@@ -57,13 +57,13 @@ return [
                         'url' => '/master-admin/settings/drive',
                         'active' => 'master-admin/settings/drive*',
                     ],
-                    [
-                        'text' => 'File Manager',
-                        'icon' => 'bi bi-folder',
-                        'url' => '/master-admin/settings/file-manager',
-                        'active' => 'master-admin/settings/file-manager*',
-                    ],
                 ],
+            ],
+            [
+                'text' => 'File Manager',
+                'icon' => 'bi bi-folder',
+                'url' => '/master-admin/file-manager',
+                'active' => 'master-admin/file-manager*',
             ],
             [
                 'text' => 'Logs',

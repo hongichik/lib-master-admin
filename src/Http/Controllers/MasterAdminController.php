@@ -178,6 +178,16 @@ class MasterAdminController extends Controller
                     $result = 'All vendor assets published successfully';
                     break;
                     
+                case 'publish-master-admin-public':
+                    Artisan::call('vendor:publish', ['--tag' => 'master-admin-public', '--force' => true]);
+                    $result = 'Master Admin public assets published successfully';
+                    break;
+                    
+                case 'publish-master-admin-environment':
+                    Artisan::call('vendor:publish', ['--tag' => 'master-admin-environment', '--force' => true]);
+                    $result = 'Master Admin environment files published successfully';
+                    break;
+                    
                 case 'composer-update':
                     $result = 'Composer update should be run manually from the command line';
                     break;

@@ -9,7 +9,6 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Database Tables</h5>
                 <div>
                     <a href="{{ route('master-admin.settings.database.manager.create-table') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Create Table

@@ -120,28 +120,28 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url('master-admin/commands/cache-clear') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'cache-clear') }}" class="btn btn-outline-primary">
                         <i class="bi bi-trash"></i> Clear Application Cache
                     </a>
-                    <a href="{{ url('master-admin/commands/config-clear') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'config-clear') }}" class="btn btn-outline-primary">
                         <i class="bi bi-trash"></i> Clear Config Cache
                     </a>
-                    <a href="{{ url('master-admin/commands/config-cache') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'config-cache') }}" class="btn btn-outline-primary">
                         <i class="bi bi-gear-fill"></i> Cache Config
                     </a>
-                    <a href="{{ url('master-admin/commands/route-clear') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'route-clear') }}" class="btn btn-outline-primary">
                         <i class="bi bi-trash"></i> Clear Route Cache
                     </a>
-                    <a href="{{ url('master-admin/commands/route-cache') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'route-cache') }}" class="btn btn-outline-primary">
                         <i class="bi bi-signpost-split"></i> Cache Routes
                     </a>
-                    <a href="{{ url('master-admin/commands/view-clear') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'view-clear') }}" class="btn btn-outline-primary">
                         <i class="bi bi-trash"></i> Clear View Cache
                     </a>
-                    <a href="{{ url('master-admin/commands/optimize-clear') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'optimize-clear') }}" class="btn btn-outline-primary">
                         <i class="bi bi-lightning"></i> Clear All Caches
                     </a>
-                    <a href="{{ url('master-admin/commands/optimize') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'optimize') }}" class="btn btn-outline-primary">
                         <i class="bi bi-lightning-charge"></i> Optimize Application
                     </a>
                 </div>
@@ -156,19 +156,19 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url('master-admin/commands/migrate') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'migrate') }}" class="btn btn-outline-primary">
                         <i class="bi bi-database"></i> Run Migrations
                     </a>
-                    <a href="{{ url('master-admin/commands/migrate-fresh') }}" class="btn btn-outline-danger">
+                    <a href="{{ route('master-admin.commands.execute', 'migrate-fresh') }}" class="btn btn-outline-danger">
                         <i class="bi bi-database-x"></i> Fresh Migrations
                     </a>
-                    <a href="{{ url('master-admin/commands/migrate-status') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'migrate-status') }}" class="btn btn-outline-primary">
                         <i class="bi bi-list-check"></i> Migration Status
                     </a>
-                    <a href="{{ url('master-admin/commands/db-seed') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'db-seed') }}" class="btn btn-outline-primary">
                         <i class="bi bi-card-list"></i> Run Seeders
                     </a>
-                    <a href="{{ url('master-admin/commands/db-wipe') }}" class="btn btn-outline-danger">
+                    <a href="{{ route('master-admin.commands.execute', 'db-wipe') }}" class="btn btn-outline-danger">
                         <i class="bi bi-exclamation-triangle"></i> Wipe Database
                     </a>
                 </div>
@@ -183,22 +183,22 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url('master-admin/commands/storage-link') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'storage-link') }}" class="btn btn-outline-primary">
                         <i class="bi bi-link"></i> Create Storage Link
                     </a>
-                    <a href="{{ url('master-admin/commands/key-generate') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'key-generate') }}" class="btn btn-outline-primary">
                         <i class="bi bi-key"></i> Generate App Key
                     </a>
                     <a href="#" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#maintenanceModeModal">
                         <i class="bi bi-slash-circle"></i> Maintenance Mode On
                     </a>
-                    <a href="{{ url('master-admin/commands/up') }}" class="btn btn-outline-success">
+                    <a href="{{ route('master-admin.commands.execute', 'up') }}" class="btn btn-outline-success">
                         <i class="bi bi-check-circle"></i> Maintenance Mode Off
                     </a>
-                    <a href="{{ url('master-admin/logs/view') }}" class="btn btn-outline-info">
+                    <a href="{{ route('master-admin.logs.view') }}" class="btn btn-outline-info">
                         <i class="bi bi-file-text"></i> View Laravel Logs
                     </a>
-                    <a href="{{ url('master-admin/logs/clear') }}" class="btn btn-outline-warning">
+                    <a href="{{ route('master-admin.logs.clear') }}" class="btn btn-outline-warning">
                         <i class="bi bi-trash"></i> Clear Laravel Logs
                     </a>
                 </div>
@@ -215,19 +215,19 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url('master-admin/commands/vendor-publish-all') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'vendor-publish-all') }}" class="btn btn-outline-primary">
                         <i class="bi bi-box-seam"></i> Publish All Vendor Assets
                     </a>
-                    <a href="{{ url('master-admin/commands/publish-master-admin-public') }}" class="btn btn-outline-info">
+                    <a href="{{ route('master-admin.commands.execute', 'publish-master-admin-public') }}" class="btn btn-outline-info">
                         <i class="bi bi-folder-plus"></i> Publish Master Admin Assets
                     </a>
-                    <a href="{{ url('master-admin/commands/publish-master-admin-environment') }}" class="btn btn-outline-warning">
+                    <a href="{{ route('master-admin.commands.execute', 'publish-master-admin-environment') }}" class="btn btn-outline-warning">
                         <i class="bi bi-gear-wide-connected"></i> Publish Master Admin Environment Files
                     </a>
-                    <a href="{{ url('master-admin/commands/package-discover') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'package-discover') }}" class="btn btn-outline-primary">
                         <i class="bi bi-search"></i> Discover Packages
                     </a>
-                    <a href="{{ url('master-admin/commands/composer-dump-autoload') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'composer-dump-autoload') }}" class="btn btn-outline-primary">
                         <i class="bi bi-arrow-repeat"></i> Dump Composer Autoload
                     </a>
                 </div>
@@ -242,19 +242,19 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url('master-admin/commands/queue-restart') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'queue-restart') }}" class="btn btn-outline-primary">
                         <i class="bi bi-arrow-clockwise"></i> Restart Queue Workers
                     </a>
-                    <a href="{{ url('master-admin/commands/queue-retry-all') }}" class="btn btn-outline-success">
+                    <a href="{{ route('master-admin.commands.execute', 'queue-retry-all') }}" class="btn btn-outline-success">
                         <i class="bi bi-arrow-repeat"></i> Retry All Failed Jobs
                     </a>
-                    <a href="{{ url('master-admin/commands/queue-clear') }}" class="btn btn-outline-danger">
+                    <a href="{{ route('master-admin.commands.execute', 'queue-clear') }}" class="btn btn-outline-danger">
                         <i class="bi bi-trash"></i> Clear Failed Jobs
                     </a>
-                    <a href="{{ url('master-admin/commands/schedule-list') }}" class="btn btn-outline-info">
+                    <a href="{{ route('master-admin.commands.execute', 'schedule-list') }}" class="btn btn-outline-info">
                         <i class="bi bi-list-task"></i> List Scheduled Tasks
                     </a>
-                    <a href="{{ url('master-admin/commands/schedule-run') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('master-admin.commands.execute', 'schedule-run') }}" class="btn btn-outline-primary">
                         <i class="bi bi-play-circle"></i> Run Scheduled Tasks
                     </a>
                 </div>
@@ -519,7 +519,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <a href="{{ url('master-admin/commands/down') }}" class="btn btn-warning">Enable Maintenance Mode</a>
+        <a href="{{ route('master-admin.commands.execute', 'down') }}" class="btn btn-warning">Enable Maintenance Mode</a>
       </div>
     </div>
   </div>

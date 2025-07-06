@@ -14,7 +14,7 @@ return [
             'text' => 'Master Admin',
             'logo' => 'vendor/master-admin/assets/img/logoIT.png',
             'logo_mini' => 'vendor/master-admin/assets/img/logoIT.png',
-            'url' => '/master-admin',
+            'route' => 'master-admin.dashboard',
         ],
         'theme' => [
             'dark_mode' => false,
@@ -24,57 +24,70 @@ return [
             [
                 'text' => 'Dashboard',
                 'icon' => 'bi bi-speedometer',
-                'url' => '/master-admin',
+                'route' => 'master-admin.dashboard',
                 'active' => 'master-admin',
             ],
             [
                 'text' => 'Settings',
                 'icon' => 'bi bi-gear-fill',
-                // 'url' => '/master-admin/settings',
                 'active' => 'master-admin/settings*',
                 'submenu' => [
                     [
                         'text' => 'Environment',
                         'icon' => 'bi bi-server',
-                        'url' => '/master-admin/settings/environment',
+                        'route' => 'master-admin.settings.environment.index',
                         'active' => 'master-admin/settings/environment*',
                     ],
                     [
                         'text' => 'Database',
                         'icon' => 'bi bi-database-fill',
-                        'url' => '/master-admin/settings/database',
+                        'route' => 'master-admin.settings.database.index',
                         'active' => 'master-admin/settings/database*',
                     ],
                     [
                         'text' => 'Mail Configuration',
                         'icon' => 'bi bi-envelope',
-                        'url' => '/master-admin/settings/mail',
+                        'route' => 'master-admin.settings.mail.index',
                         'active' => 'master-admin/settings/mail*',
                     ],
                     [
                         'text' => 'Google Drive',
                         'icon' => 'bi bi-cloud-arrow-up',
-                        'url' => '/master-admin/settings/drive',
+                        'route' => 'master-admin.settings.drive.index',
                         'active' => 'master-admin/settings/drive*',
                     ],
                 ],
             ],
             [
+                'text' => 'Code Generator',
+                'icon' => 'bi bi-code-slash',
+                'active' => 'master-admin/code-generator*',
+                'submenu' => [
+                    [
+                        'text' => 'Auth Generator',
+                        'icon' => 'bi bi-person-fill',
+                        'route' => 'master-admin.code-generator.auth.index',
+                        'active' => 'master-admin/code-generator/auth*',
+                    ],
+                    // Add more code generators here
+                ],
+            ],
+            [
                 'text' => 'File Manager',
                 'icon' => 'bi bi-folder',
-                'url' => '/master-admin/file-manager',
+                'route' => 'master-admin.file-manager.index',
                 'active' => 'master-admin/file-manager*',
             ],
             [
                 'text' => 'Logs',
                 'icon' => 'bi bi-file-text-fill',
-                'url' => '/master-admin/logs/view',
+                'route' => 'master-admin.logs.view',
                 'active' => 'master-admin/logs*',
             ],
             [
                 'text' => 'Backup',
                 'icon' => 'bi bi-hdd-stack',
-                'url' => '/master-admin/backup',
+                'route' => 'master-admin.backup.index',
                 'active' => 'master-admin/backup*',
             ],
         ],

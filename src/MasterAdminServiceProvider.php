@@ -33,6 +33,23 @@ class MasterAdminServiceProvider extends ServiceProvider
             __DIR__ . '/../www' => base_path(),
         ], 'master-admin-environment');
 
+        $this->publishes([
+            __DIR__ . '/../resources/views/export-theme' => base_path('resources/views/vendor/master-admin'),
+        ], 'master-admin-export-theme');
+
+        // Publish Auth system files
+        $this->publishes([
+            __DIR__ . '/../Export/Auth/views' => resource_path('views'),
+            __DIR__ . '/../Export/Auth/Controllers' => app_path('Http/Controllers'),
+            __DIR__ . '/../Export/Auth/Middleware' => app_path('Http/Middleware'),
+            __DIR__ . '/../Export/Auth/Models' => app_path('Models'),
+            __DIR__ . '/../Export/Auth/routes' => base_path('routes'),
+            __DIR__ . '/../Export/Auth/seeders' => database_path('seeders'),
+            __DIR__ . '/../Export/Auth/Providers' => app_path('Providers'),
+            __DIR__ . '/../Export/Auth/migrations' => database_path('migrations'),
+            __DIR__ . '/../Export/Auth/config' => config_path(),
+        ], 'master-admin-auth');
+
 
         // Đăng ký middleware
         $router = $this->app['router'];

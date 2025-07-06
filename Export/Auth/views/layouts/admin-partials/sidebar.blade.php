@@ -1,12 +1,12 @@
 {{-- filepath: /Users/admin/Documents/code/thu_vien/laravel/vendor/hongdev/master-admin/resources/views/master-admin/layout/partials/sidebar.blade.php --}}
-<aside class="app-sidebar {{ config('masteradmin.sidebar.theme.class', 'bg-body-secondary shadow') }}" data-bs-theme="{{ config('masteradmin.sidebar.theme.dark_mode', true) ? 'dark' : 'light' }}">
+<aside class="app-sidebar {{ config('admin.sidebar.theme.class', 'bg-body-secondary shadow') }}" data-bs-theme="{{ config('admin.sidebar.theme.dark_mode', true) ? 'dark' : 'light' }}">
     {{-- Sidebar Brand --}}
     <div class="sidebar-brand">
-        <a href="{{ url(config('masteradmin.sidebar.brand.url', '/admin')) }}" class="brand-link">
-            <img src="{{ asset(config('masteradmin.sidebar.brand.logo', 'vendor/master-admin/assets/img/logoIT.png')) }}" 
-                 alt="{{ config('masteradmin.sidebar.brand.text', 'Admin') }} Logo" 
+        <a href="{{ url(config('admin.sidebar.brand.url', '/admin')) }}" class="brand-link">
+            <img src="{{ asset(config('admin.sidebar.brand.logo', 'vendor/master-admin/assets/img/logoIT.png')) }}" 
+                 alt="{{ config('admin.sidebar.brand.text', 'Admin') }} Logo" 
                  class="brand-image">
-            <span class="brand-text fw-light">{{ config('masteradmin.sidebar.brand.text', 'Master Admin') }}</span>
+            <span class="brand-text fw-light">{{ config('admin.sidebar.brand.text', 'Master Admin') }}</span>
         </a>
     </div>
 
@@ -15,7 +15,7 @@
         <nav class="mt-2">
             {{-- Sidebar Menu --}}
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="navigation">
-                @foreach(config('masteradmin.sidebar.menu', []) as $menuItem)
+                @foreach(config('admin.sidebar.menu', []) as $menuItem)
                     @if(isset($menuItem['permission']) && !auth()->user()->can($menuItem['permission']))
                         @continue
                     @endif

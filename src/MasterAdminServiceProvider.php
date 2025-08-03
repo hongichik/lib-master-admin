@@ -33,10 +33,6 @@ class MasterAdminServiceProvider extends ServiceProvider
             __DIR__ . '/../www' => base_path(),
         ], 'master-admin-environment');
 
-        $this->publishes([
-            __DIR__ . '/../resources/views/export-theme' => base_path('resources/views/vendor/master-admin'),
-        ], 'master-admin-export-theme');
-
         // Publish Auth system files
         $this->publishes([
             __DIR__ . '/../Export/Auth/views' => resource_path('views'),

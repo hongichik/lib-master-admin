@@ -1,5 +1,7 @@
 # Master Admin
 
+> **Yêu cầu:** Laravel 10, PHP  8.2
+
 **Master Admin** là thư viện Laravel giúp cấu hình nhanh trang quản trị (admin) và một số giao diện người dùng cơ bản, dựa trên giao diện [AdminLTE](https://github.com/ColorlibHQ/AdminLTE#).
 
 ## Tính năng
@@ -10,8 +12,9 @@
 - Dễ dàng mở rộng và tuỳ chỉnh theo nhu cầu.
 - Tích hợp sẵn Google Drive storage để backup và lưu trữ file.
 
-
 ## Cài đặt
+
+**Yêu cầu:** Laravel 10, PHP >= 8.2
 
 ### 1. Thêm package từ local path (nếu phát triển hoặc test local)
 
@@ -61,7 +64,6 @@ find . -type f -name "*.sh" -exec chmod +x {} \;
 
 ---
 
-
 ## Sử dụng
 
 - Đăng ký ServiceProvider nếu Laravel không tự động phát hiện.
@@ -79,7 +81,6 @@ GOOGLE_DRIVE_REFRESH_TOKEN=your_refresh_token
 GOOGLE_DRIVE_FOLDER=your_folder_name
 ```
 
-
 > **Lưu ý:** Thư viện sẽ tự động refresh access token khi cần thiết. Không cần cài đặt thêm package nào khác.
 
 ### Hướng dẫn lấy Google Drive credentials
@@ -95,4 +96,5 @@ GOOGLE_DRIVE_FOLDER=your_folder_name
 ## Nguồn giao diện
 
 Giao diện sử dụng: [AdminLTE by ColorlibHQ](https://github.com/ColorlibHQ/AdminLTE#)
+
 # lib-master-admin

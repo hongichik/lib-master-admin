@@ -8,7 +8,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('login', [AuthController::class, 'login'])->name('login.submit');
-        
+
         Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
         Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
         Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
@@ -19,7 +19,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::prefix('role')->name('role.')->group(function () {
+            Route::resource('permission', App\Http\Controllers\Admin\Role\PermissionController::class);
+            Route::resource('role', App\Http\Controllers\Admin\Role\RoleController::class);
+            Route::resource('admin', App\Http\Controllers\Admin\Role\AdminController::class);
+        });
     });
 });
 
-
+Route::any('{any}', function () {
+    return redirect()->route('admin.dashboard');
+})->where('any', '.*');

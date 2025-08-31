@@ -24,9 +24,34 @@ return [
             [
                 'text' => 'Dashboard',
                 'icon' => 'bi bi-speedometer',
-                'route' => 'master-admin.dashboard',
-                'active' => 'master-admin',
-            ]
+                'route' => 'admin.dashboard',
+                'active' => 'admin.dashboard',
+            ],
+            [
+                'text' => 'Quản lý quản trị',
+                'icon' => 'bi bi-shield-lock',
+                'active' => 'admin/role*',
+                        'submenu' => [
+                            [
+                                'text' => 'Quyền',
+                                'icon' => 'bi bi-key',
+                                'route' => 'admin.role.permission.index',
+                                'active' => 'admin/role/permission*',
+                            ],
+                            [
+                                'text' => 'Vai trò',
+                                'icon' => 'bi bi-person-badge',
+                                'route' => 'admin.role.role.index',
+                                'active' => 'admin/role/role*',
+                            ],
+                            [
+                                'text' => 'Quản trị viên',
+                                'icon' => 'bi bi-people',
+                                'route' => 'admin.role.admin.index',
+                                'active' => 'admin/role/admin*',
+                            ],
+                        ],
+            ],
         ],
     ],
 ];

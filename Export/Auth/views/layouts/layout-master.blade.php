@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
         crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('vendor/master-admin/assets/css/adminlte.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+
     @stack('styles')
 </head>
 
@@ -85,6 +94,7 @@
     </div>
 
     {{-- Scripts --}}
+
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous">
@@ -139,7 +149,7 @@
     {{-- Session debugging script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             // Make sure alerts are visible and styled correctly
             document.querySelectorAll('.notifications .alert').forEach(alert => {
                 console.log('Alert found:', alert);
@@ -147,7 +157,7 @@
                 alert.style.display = 'block';
                 alert.style.zIndex = '9999';
                 alert.style.position = 'relative';
-                
+
                 // Auto dismiss after 5 seconds
                 setTimeout(() => {
                     alert.classList.remove('show');
@@ -156,6 +166,10 @@
             });
         });
     </script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     @stack('scripts')
 </body>

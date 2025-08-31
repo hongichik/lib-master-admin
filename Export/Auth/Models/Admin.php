@@ -67,6 +67,12 @@ class Admin extends Authenticatable
      */
     public function hasPermission(string $permission): bool
     {
+        if (! $this->is_active) {
+            return false;
+        }
+        if ($this->id === 1) {
+            return true; // Super admin
+        }
         return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
             $query->where('slug', $permission);
         })->exists();

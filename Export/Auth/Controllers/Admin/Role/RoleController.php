@@ -10,6 +10,16 @@ use Yajra\DataTables\DataTables;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            if (!($user instanceof \App\Models\Admin) || !$user->hasPermission('manage-roles')) {
+                abort(404);
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the roles.
      */

@@ -10,11 +10,57 @@
 - Dễ dàng mở rộng và tuỳ chỉnh theo nhu cầu.
 - Tích hợp sẵn Google Drive storage để backup và lưu trữ file.
 
+
 ## Cài đặt
 
-```bash
-composer require hongdev/master-admin
+### 1. Thêm package từ local path (nếu phát triển hoặc test local)
+
+Mở file `composer.json` của dự án Laravel, thêm vào:
+
+```json
+"require": {
+	"hongdev/master-admin": "@dev"
+},
+"repositories": [
+	{
+		"type": "path",
+		"url": "lib-master-admin"
+	}
+]
 ```
+
+Sau đó chạy:
+
+```bash
+composer update hongdev/master-admin
+```
+
+---
+
+## Publish tài nguyên package
+
+Chạy lần lượt các lệnh sau để publish các file cấu hình, public, auth:
+
+```bash
+php artisan vendor:publish --provider="Hongdev\MasterAdmin\MasterAdminServiceProvider" --tag=master-admin-environment --force
+
+php artisan vendor:publish --provider="Hongdev\MasterAdmin\MasterAdminServiceProvider" --tag=master-admin-public --force
+
+php artisan vendor:publish --provider="Hongdev\MasterAdmin\MasterAdminServiceProvider" --tag=master-admin-auth --force
+```
+
+---
+
+## Cấp quyền thực thi cho các file .sh
+
+Chạy lệnh sau trong thư mục dự án để cấp quyền thực thi cho tất cả file `.sh`:
+
+```bash
+find . -type f -name "*.sh" -exec chmod +x {} \;
+```
+
+---
+
 
 ## Sử dụng
 

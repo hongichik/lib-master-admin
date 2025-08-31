@@ -6,11 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            if (!($user instanceof \App\Models\Admin) || !$user->hasPermission('manage-admins')) {
+                abort(404);
+            }
+            return $next($request);
+        });
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -59,7 +70,7 @@ class AdminController extends Controller
         $admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'is_active' => $request->has('is_active'),
         ]);
 
@@ -93,7 +104,7 @@ class AdminController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = $request->password;
+            $data['password'] = Hash::make($request->password);
         }
 
         $admin->update($data);

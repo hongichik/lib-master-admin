@@ -9,6 +9,16 @@ use Yajra\DataTables\DataTables;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            if (!($user instanceof \App\Models\Admin) || !$user->hasPermission('manage-permissions')) {
+                abort(404);
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the permissions.
      */

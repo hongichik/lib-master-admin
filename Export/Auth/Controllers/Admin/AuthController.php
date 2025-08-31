@@ -41,11 +41,6 @@ class AuthController extends Controller
             ])->onlyInput('email');
         }
 
-        if (is_null($admin->email_verified_at)) {
-            return back()->withErrors([
-                'email' => 'Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực.',
-            ])->onlyInput('email');
-        }
 
         if (!$admin->is_active) {
             return back()->withErrors([

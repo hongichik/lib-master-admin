@@ -14,6 +14,8 @@ class AdminMiddleware
             return redirect()->route('admin.login');
         }
 
-        return $next($request);
+    Auth::shouldUse('admin');
+
+    return $next($request);
     }
 }
